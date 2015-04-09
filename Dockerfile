@@ -1,4 +1,4 @@
-FROM onmodulus/image-run-base:1.0.0
+FROM onmodulus/image-run-base:0.0.1
 
 ADD . /opt/modulus
 ENV PATH=/opt/modulus/bin:$PATH
