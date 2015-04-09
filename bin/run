@@ -1,0 +1,86 @@
+#!/bin/bash
+source /opt/nvm/nvm.sh
+
+#set -x
+set -e
+
+cd /mnt/app
+
+# Searches a directory top-down looking for a file.
+findFile() {
+  find $2 -name $1 ! -path "*/node_modules/*" ! -path ".git/*" | \
+  awk -F'/' '{print $0 "," NF-1}' | \
+  sort -t, -nk2 | \
+  awk -F',' '{print $1}' | \
+  head -n 1
+}
+
+# Find the package.json.
+PACKAGE_PATH=$(findFile "package.json" "./")
+
+# Attempt to read the main, start, and version from package.json.
+NODE_VERSION=$(get-version --engine node $PACKAGE_PATH)
+MAIN=$(node -pe "require('$PACKAGE_PATH').main" 2> /dev/null || true)
+START=$(node -pe "require('$PACKAGE_PATH').scripts.start" 2> /dev/null || true)
+
+if [ -z $PACKAGE_PATH ] || [ ! -f $PACKAGE_PATH ]; then
+  echo "WARNING: No package.json file found."
+else
+  # Change the working directory to the location of the package.json.
+  echo "INFO: Found package.json at $PACKAGE_PATH."
+  cd $(dirname $PACKAGE_PATH)
+fi
+
+# Start script not specified, find a main file.
+if [ -z $START ]; then
+
+  if [ -z $MAIN ]; then
+    echo "WARNING: Main file not specified in package.json."
+  fi
+
+  if [ -n $MAIN ] && [ ! -f $MAIN ]; then
+    echo "WARNING: Main file specified in package.json, but not found: $MAIN."
+    MAIN=""
+  fi
+
+  if [ -z $MAIN ]; then
+    echo "WARNING: Looking for common main file names: index.js, app.js, server.js, main.js."
+    MAIN="index.js"
+    if [ ! -f $MAIN ]; then
+      MAIN="app.js"
+    fi
+
+    if [ ! -f $MAIN ]; then
+      MAIN="server.js"
+    fi
+
+    if [ ! -f $MAIN ]; then
+      MAIN="main.js"
+    fi
+
+    if [ ! -f $MAIN ]; then
+      MAIN=""
+    fi
+  fi
+else
+  echo "INFO: start script specified in package.json: $START."
+fi
+
+if [ -z $MAIN ] && [ -z $START ]; then
+  echo "ERROR: No main or start script found. There is no application to run."
+  exit 0
+fi
+
+TORUN=$START
+
+if [ -z $TORUN ]; then
+  TORUN="node $MAIN"
+fi
+
+# Install node
+NVM_DIR=$HOME/.nvm
+
+echo "INFO: Initializing Node.js v$NODE_VERSION."
+nvm install $NODE_VERSION
+echo "INFO: Running command $TORUN"
+nvm exec $NODE_VERSION $TORUN
