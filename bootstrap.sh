@@ -5,8 +5,6 @@ set -x
 export HOME=/root
 export TEMP_DIR=/root/tmp
 
-# TODO: add /opt/modulus/bin to /etc/environment
-
 # Install nvm
 mkdir -p /opt/nvm
 export NVM_DIR=/opt/nvm

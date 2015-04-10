@@ -85,4 +85,5 @@ NVM_DIR=$HOME/.nvm
 echo "INFO: Initializing Node.js v$NODE_VERSION."
 nvm install $NODE_VERSION &> /dev/null
 echo "INFO: Running command $TORUN"
-nvm exec $NODE_VERSION $TORUN
+nvm use $NODE_VERSION
+exec $TORUN
