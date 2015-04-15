@@ -86,4 +86,5 @@ echo "INFO: Initializing Node.js v$NODE_VERSION."
 nvm install $NODE_VERSION &> /dev/null
 echo "INFO: Running command $TORUN"
 nvm use $NODE_VERSION
+# Must use exec for proper supervisor control.
 exec $TORUN
