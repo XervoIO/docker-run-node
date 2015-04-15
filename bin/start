@@ -22,8 +22,8 @@ PACKAGE_PATH=$(findFile "package.json" "./")
 
 # Attempt to read the main, start, and version from package.json.
 NODE_VERSION=$(get-version --engine node $PACKAGE_PATH)
-MAIN=$(node -pe "require('$PACKAGE_PATH').main" 2> /dev/null || true)
-START=$(node -pe "require('$PACKAGE_PATH').scripts.start" 2> /dev/null || true)
+MAIN=$(node -pe "require('$PACKAGE_PATH').main || ''" 2> /dev/null || true)
+START=$(node -pe "require('$PACKAGE_PATH').scripts.start || ''" 2> /dev/null || true)
 
 if [ -z $PACKAGE_PATH ] || [ ! -f $PACKAGE_PATH ]; then
   echo "WARNING: No package.json file found."
