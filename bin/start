@@ -85,7 +85,10 @@ NVM_DIR=$HOME/.nvm
 if [ -f /mnt/app/app.json ] && [[ $MODULUS_CONFIG_ENGINES_NODE || $MODULUS_CONFIG_ENGINES_IOJS ]]; then
   SOURCE_PATH=/mnt/app/app.json
 else
-  SOURCE_PATH=$(basename $PACKAGE_PATH)
+  SOURCE_PATH=""
+  if [ -f $PACKAGE_PATH ]; then
+    SOURCE_PATH=$(basename $PACKAGE_PATH)
+  fi
 fi
 
 NODE_VERSION=$(get-version --engine node $SOURCE_PATH)
