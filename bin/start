@@ -81,13 +81,13 @@ fi
 # Install node
 NVM_DIR=$HOME/.nvm
 
-# support deriving node version from app.json or package.json
 if [ -f /mnt/app/app.json ] && [[ $MODULUS_CONFIG_ENGINES_NODE || $MODULUS_CONFIG_ENGINES_IOJS ]]; then
   SOURCE_PATH=/mnt/app/app.json
 else
   SOURCE_PATH=""
-  if [ -f $PACKAGE_PATH ]; then
-    SOURCE_PATH=$(basename $PACKAGE_PATH)
+  # If ther's a package.json, we're already cd'd there.
+  if [ -f ./package.json ]; then
+    SOURCE_PATH=./package.json
   fi
 fi
 
