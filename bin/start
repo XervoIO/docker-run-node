@@ -75,7 +75,7 @@ fi
 TORUN=$START
 
 if [ -z $TORUN ]; then
-  TORUN="node $MAIN"
+  TORUN="node $EXEC_ARGS $MAIN"
 fi
 
 # Install node
