@@ -28,7 +28,7 @@ if [[ -z $PACKAGE_PATH ]] || [[ ! -f $PACKAGE_PATH ]]; then
   echo "WARNING: No package.json file found."
 else
   # Change the working directory to the location of the package.json.
-  echo "INFO: Found package.json at $PACKAGE_PATH."
+  echo "Found package.json: $PACKAGE_PATH"
   cd $(dirname $PACKAGE_PATH)
 fi
 
@@ -64,7 +64,7 @@ if [[ -z $START ]]; then
     fi
   fi
 else
-  echo "INFO: start script specified in package.json: $START."
+  echo "Start script specified in package.json: $START"
 fi
 
 if [[ -z $MAIN ]] && [[ -z $START ]]; then
@@ -72,9 +72,9 @@ if [[ -z $MAIN ]] && [[ -z $START ]]; then
   exit 0
 fi
 
-TORUN=$START
-
-if [[ -z $TORUN ]]; then
+if [[ $START ]]; then
+  TORUN="npm start";
+else
   TORUN="node $EXEC_ARGS $MAIN"
 fi
 
@@ -97,9 +97,10 @@ if [[ ! $NODE_VERSION ]]; then
   exit 1
 fi
 
-echo "INFO: Initializing Node.js v$NODE_VERSION."
+echo "Initializing Node.js v$NODE_VERSION."
 nvm install $NODE_VERSION &> /dev/null
-echo "INFO: Running command $TORUN"
 nvm use $NODE_VERSION
-# Must use exec for proper supervisor control.
-exec $TORUN
+
+echo "Running command $TORUN"
+$TORUN &
+wait
