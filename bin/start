@@ -72,12 +72,6 @@ if [[ -z $MAIN ]] && [[ -z $START ]]; then
   exit 0
 fi
 
-if [[ $START ]]; then
-  TORUN="npm start";
-else
-  TORUN="node $EXEC_ARGS $MAIN"
-fi
-
 # Install node
 NVM_DIR=$HOME/.nvm
 
@@ -97,10 +91,25 @@ if [[ ! $NODE_VERSION ]]; then
   exit 1
 fi
 
-echo "Initializing Node.js v$NODE_VERSION."
+printf "Initializing Node.js $NODE_VERSION\n"
 nvm install $NODE_VERSION &> /dev/null
 nvm use $NODE_VERSION
 
-echo "Running command $TORUN"
+if [[ $START ]]; then
+  NPM_VERSION=$(get-version --engine npm $SOURCE_PATH 2>/dev/null)
+  if [[ ! $NPM_VERSION ]]; then
+    printf "Unable to determine npm version.\n"
+    exit 1
+  fi
+
+  printf "Installing npm $NPM_VERSION\n"
+  npm install npm@$NPM_VERSION --global > /dev/null 2>&1
+
+  TORUN="npm start";
+else
+  TORUN="node $EXEC_ARGS $MAIN"
+fi
+
+echo "Running command: $TORUN"
 $TORUN &
 wait
