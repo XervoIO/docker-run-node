@@ -1,4 +1,4 @@
-FROM onmodulus/image-run-base:0.0.1
+FROM onmodulus/docker-run-base
 
 ADD . /opt/modulus
 ENV PATH=/opt/modulus/bin:$PATH
