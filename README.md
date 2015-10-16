@@ -21,8 +21,8 @@ All Modulus images enforce a strict data convention for security and ease of orc
 The only requirement for a basic running container is to put the fully extracted application bundle, with npm modules already installed, in the app folder. Then mount this directory to /mnt inside the container.
 
 ``` text
-$ docker pull onmodulus/docker-run-node:latest
-$ docker run -v /host-folder:/mnt -p 80:8080 onmodulus/docker-run-node:latest start
+$ docker pull onmodulus/run-node
+$ docker run -v /host-folder:/mnt -p 80:8080 onmodulus/run-node start
 ```
 
 All Modulus run images have a binary available in the PATH named "start" that is a script designed to run the inner application. The start script is the most important part of each image type and is what's responsible for properly running the underlying application.
@@ -43,7 +43,7 @@ stdout_logfile=/mnt/log/app.log
 Save this to /host-folder/supervisor.conf and run the container.
 
 ``` text
-$ docker run -v /host-folder:/mnt -p 80:8080 onmodulus/docker-run-node:latest
+$ docker run -v /host-folder:/mnt -p 80:8080 onmodulus/run-node
 ```
 
 # License
