@@ -1,4 +1,4 @@
-FROM onmodulus/docker-run-base
+FROM onmodulus/run-base
 
 ADD . /opt/modulus
 ENV PATH=/opt/modulus/bin:$PATH
