@@ -1,13 +1,14 @@
-# Modulus Node.js Docker Run Image
-The Modulus images are a set of Docker images designed to run arbitrary applications with a standardized external interface. The Modulus image convention enforces a high degree of security and control required by PaaS environments and might not be suitable for small, more focused, deployments.
+# Xervo Node.js Docker Run Image
 
-Refer to the [base run image](https://github.com/onmodulus/docker-run-base) for details on how all Modulus Run Images work.
+The Xervo images are a set of Docker images designed to run arbitrary applications with a standardized external interface. The Xervo image convention enforces a high degree of security and control required by PaaS environments and might not be suitable for small, more focused, deployments.
+
+Refer to the [base run image](https://github.com/XervoIO/docker-run-base) for details on how all Xervo Run Images work.
 
 ## Image Details
-The Modulus Node.js image supports running any version of Node.js and handles initializing the correct version as part of its start process. The node version can be defined in the app bundle's package.json or app.json files. If no version is specified the most recent stable version of Node.js is used.
+The Xervo Node.js image supports running any version of Node.js and handles initializing the correct version as part of its start process. The node version can be defined in the app bundle's package.json or app.json files. If no version is specified the most recent stable version of Node.js is used.
 
 ## How to use this image
-All Modulus images enforce a strict data convention for security and ease of orchestration. Application source should be mounted in externally and assumptions are made based on these directories.
+All Xervo images enforce a strict data convention for security and ease of orchestration. Application source should be mounted in externally and assumptions are made based on these directories.
 
 ``` text
 /host-folder/
@@ -21,15 +22,15 @@ All Modulus images enforce a strict data convention for security and ease of orc
 The only requirement for a basic running container is to put the fully extracted application bundle, with npm modules already installed, in the app folder. Then mount this directory to /mnt inside the container.
 
 ``` text
-$ docker pull onmodulus/run-node
-$ docker run -v /host-folder:/mnt -p 80:8080 onmodulus/run-node start
+$ docker pull xervo/run-node
+$ docker run -v /host-folder:/mnt -p 80:8080 xervo/run-node start
 ```
 
-All Modulus run images have a binary available in the PATH named "start" that is a script designed to run the inner application. The start script is the most important part of each image type and is what's responsible for properly running the underlying application.
+All Xervo run images have a binary available in the PATH named "start" that is a script designed to run the inner application. The start script is the most important part of each image type and is what's responsible for properly running the underlying application.
 
 The start script in the Node.js run image handles initializing the proper version of Node.js and then runs either the main file, start script, or looks for common files if those aren't specified.
 
-Even though you can run the start script directly, Modulus has adopted supervisord as the underlying process monitor for all application types. The supervisor daemon is preconfigured in all run images to load /mnt/supervisor.conf. The high-level Modulus tools generate this configuration file to support passing environment variables into the application and redirect all log output to /mnt/log/app.log. The supervisor daemon is already baked into the underlying run image init process, so you can run the image directly once a supervisor.conf file is provided.
+Even though you can run the start script directly, Xervo has adopted supervisord as the underlying process monitor for all application types. The supervisor daemon is preconfigured in all run images to load /mnt/supervisor.conf. The high-level Xervo tools generate this configuration file to support passing environment variables into the application and redirect all log output to /mnt/log/app.log. The supervisor daemon is already baked into the underlying run image init process, so you can run the image directly once a supervisor.conf file is provided.
 
 ```text
 [program:app]
@@ -43,7 +44,7 @@ stdout_logfile=/mnt/log/app.log
 Save this to /host-folder/supervisor.conf and run the container.
 
 ``` text
-$ docker run -v /host-folder:/mnt -p 80:8080 onmodulus/run-node
+$ docker run -v /host-folder:/mnt -p 80:8080 xervo/run-node
 ```
 
 # License
